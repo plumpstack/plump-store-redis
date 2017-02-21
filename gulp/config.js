@@ -3,6 +3,6 @@ module.exports = {
   src: 'src',
   tests: 'test',
   types: 'types',
-  scripts: ['**/*.js'],
+  scripts: ['**/*.js', '!test/**'],
   typings: ['**/*.d.ts'],
 };

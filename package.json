@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "gulp test"
+    "test": "mocha --compilers js:babel-core/register test/*.spec.js --require test/helper.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
+    "chai-subset": "^1.4.0",
     "del": "^2.2.2",
     "fakeredis": "^1.0.3",
     "gulp": "gulpjs/gulp.git#4.0",

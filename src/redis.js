@@ -48,7 +48,7 @@ export class RedisStore extends KeyValueStore {
   }
 
   _keys(typeName) {
-    return this[$redis].keysAsync(`${typeName}:store:*`);
+    return this[$redis].keysAsync(`${typeName}:attributes:*`);
   }
 
   _get(k) {

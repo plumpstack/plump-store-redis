@@ -1,11 +1,4 @@
-'use strict';
+import { RedisStore } from './redis';
+export { RedisStore, };
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.RedisStore = undefined;
-
-var _redis = require('./redis');
-
-exports.RedisStore = _redis.RedisStore;
-//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbIlJlZGlzU3RvcmUiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFBQTs7UUFHRUEsVSIsImZpbGUiOiJpbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IFJlZGlzU3RvcmUgfSBmcm9tICcuL3JlZGlzJztcblxuZXhwb3J0IHtcbiAgUmVkaXNTdG9yZSxcbn07XG4iXX0=
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sRUFBRSxVQUFVLEVBQUUsTUFBTSxTQUFTLENBQUM7QUFFckMsT0FBTyxFQUNMLFVBQVUsR0FDWCxDQUFDIiwiZmlsZSI6ImluZGV4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgUmVkaXNTdG9yZSB9IGZyb20gJy4vcmVkaXMnO1xuXG5leHBvcnQge1xuICBSZWRpc1N0b3JlLFxufTtcbiJdfQ==

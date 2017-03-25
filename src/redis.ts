@@ -1,14 +1,12 @@
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import * as Redis from 'redis';
-import { KeyValueStore } from 'plump';
+import { KeyValueStore, ModelData } from 'plump';
 
-
-const RedisService = Promise.promisifyAll(Redis);
-const $redis = Symbol('$redis');
+const RedisService: any = Bluebird.promisifyAll(Redis);
 
 export class RedisStore extends KeyValueStore {
-
-  constructor(opts = {}) {
+  private redis: any;
+  constructor(opts: { redisClient?: any } = {}) {
     super(opts);
     const options = Object.assign(
       {},
@@ -36,30 +34,29 @@ export class RedisStore extends KeyValueStore {
       opts
     );
     if (opts.redisClient !== undefined) {
-      this[$redis] = opts.redisClient;
+      this.redis = opts.redisClient;
     } else {
-      this[$redis] = RedisService.createClient(options);
+      this.redis = RedisService.createClient(options);
     }
-    this.isCache = true;
   }
 
   teardown() {
-    return this[$redis].quitAsync();
+    return this.redis.quitAsync();
   }
 
-  _keys(typeName) {
-    return this[$redis].keysAsync(`${typeName}:attributes:*`);
+  _keys(typeName: string): Bluebird<string[]> {
+    return this.redis.keysAsync(`${typeName}:*`);
   }
 
-  _get(k) {
-    return this[$redis].getAsync(k);
+  _get(k: string): Bluebird<ModelData | null> {
+    return this.redis.getAsync(k).then(v => JSON.parse(v));
   }
 
-  _set(k, v) {
-    return this[$redis].setAsync(k, v);
+  _set(k: string, v: ModelData): Bluebird<ModelData> {
+    return this.redis.setAsync(k, JSON.stringify(v));
   }
 
-  _del(k) {
-    return this[$redis].delAsync(k);
+  _del(k: string): Bluebird<ModelData> {
+    return this.redis.delAsync(k);
   }
 }

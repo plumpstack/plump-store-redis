@@ -1,0 +1,4 @@
+import { RedisStore } from './redis';
+export { RedisStore, };
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sRUFBRSxVQUFVLEVBQUUsTUFBTSxTQUFTLENBQUM7QUFFckMsT0FBTyxFQUNMLFVBQVUsR0FDWCxDQUFDIiwiZmlsZSI6ImluZGV4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgUmVkaXNTdG9yZSB9IGZyb20gJy4vcmVkaXMnO1xuXG5leHBvcnQge1xuICBSZWRpc1N0b3JlLFxufTtcbiJdfQ==

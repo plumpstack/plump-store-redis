@@ -2,9 +2,11 @@
 /* eslint no-shadow: 0 */
 
 import { RedisStore } from '../src/redis';
-import { testSuite } from 'plump/test/storageTests';
+import { testSuite } from './storageTests';
 import * as Redis from 'fakeredis';
-import Bluebird from 'bluebird';
+import * as Bluebird from 'bluebird';
+
+import 'mocha';
 
 Bluebird.promisifyAll(Redis);
 

@@ -1,5 +1,3 @@
-/// <reference types="bluebird" />
-import * as Bluebird from 'bluebird';
 import { KeyValueStore, ModelData, ModelSchema } from 'plump';
 export declare class RedisStore extends KeyValueStore {
     private redis;
@@ -11,9 +9,10 @@ export declare class RedisStore extends KeyValueStore {
     addSchema(t: {
         typeName: string;
         schema: ModelSchema;
-    }): Bluebird<void>;
-    _keys(typeName: string): Bluebird<string[]>;
-    _get(k: string): Bluebird<ModelData | null>;
-    _set(k: string, v: ModelData): Bluebird<ModelData>;
-    _del(k: string): Bluebird<ModelData>;
+    }): Promise<void>;
+    promiseCall(method: string, ...args: any[]): Promise<any>;
+    _keys(typeName: string): Promise<string[]>;
+    _get(k: string): Promise<ModelData | null>;
+    _set(k: string, v: ModelData): Promise<ModelData>;
+    _del(k: string): Promise<ModelData>;
 }

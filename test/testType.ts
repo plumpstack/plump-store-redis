@@ -55,8 +55,8 @@ export const QueryChildrenSchema: RelationshipSchema = {
         queryChildren: 'on "tests"."id" = "queryChildren"."parent_id" and "queryChildren"."perm" >= 2',
       },
       where: {
-        queryParents: 'where "queryParents"."child_id" = ? and "queryParents"."perm" >= 2',
-        queryChildren: 'where "queryChildren"."parent_id" = ? and "queryChildren"."perm" >= 2',
+        queryParents: '"query_children"."child_id" = ? and "query_children"."perm" >= 2',
+        queryChildren: '"query_children"."parent_id" = ? and "query_children"."perm" >= 2',
       },
     },
   },
@@ -94,5 +94,5 @@ export const TestSchema: ModelSchema = {
 
 export class TestType extends Model {
   static typeName = 'tests';
-  static schema = TestSchema;
+  static schema: ModelSchema = TestSchema;
 }

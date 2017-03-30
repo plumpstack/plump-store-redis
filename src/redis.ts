@@ -1,8 +1,5 @@
-import * as Bluebird from 'bluebird';
 import * as Redis from 'redis';
 import { KeyValueStore, ModelData, ModelSchema } from 'plump';
-
-const RedisService: any = Bluebird.promisifyAll(Redis);
 
 function saneNumber(i) {
   return ((typeof i === 'number') && (!isNaN(i)) && (i !== Infinity) && (i !== -Infinity));
@@ -40,7 +37,7 @@ export class RedisStore extends KeyValueStore {
     if (opts.redisClient !== undefined) {
       this.redis = opts.redisClient;
     } else {
-      this.redis = RedisService.createClient(options);
+      this.redis = Redis.createClient(options);
     }
   }
 
@@ -67,21 +64,32 @@ export class RedisStore extends KeyValueStore {
     });
   }
 
-
-
-  _keys(typeName: string): Bluebird<string[]> {
-    return this.redis.keysAsync(`${typeName}:*`);
+  promiseCall(method: string, ...args): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const argsWithCB = args.concat((err, val) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(val);
+        }
+      });
+      this.redis[method].apply(this.redis, argsWithCB);
+    });
   }
 
-  _get(k: string): Bluebird<ModelData | null> {
-    return this.redis.getAsync(k).then(v => JSON.parse(v));
+  _keys(typeName: string): Promise<string[]> {
+    return this.promiseCall('keys', `${typeName}:*`);
   }
 
-  _set(k: string, v: ModelData): Bluebird<ModelData> {
-    return this.redis.setAsync(k, JSON.stringify(v));
+  _get(k: string): Promise<ModelData | null> {
+    return this.promiseCall('get', k).then(v => JSON.parse(v));
   }
 
-  _del(k: string): Bluebird<ModelData> {
-    return this.redis.delAsync(k);
+  _set(k: string, v: ModelData): Promise<ModelData> {
+    return this.promiseCall('set', k, JSON.stringify(v));
+  }
+
+  _del(k: string): Promise<ModelData> {
+    return this.promiseCall('del', k);
   }
 }

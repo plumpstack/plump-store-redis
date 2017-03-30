@@ -1,6 +1,6 @@
 {
   "name": "plump-store-redis",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Plump plugin for Redis",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,22 +24,16 @@
   },
   "homepage": "https://github.com/kstf/plump-store-redis#readme",
   "devDependencies": {
-    "@types/bluebird": "^3.0.37",
     "@types/core-js": "^0.9.38",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/mocha": "^2.2.40",
     "@types/node": "^7.0.10",
-    "babel": "^6.5.2",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "del": "^2.2.2",
     "fakeredis": "^1.0.3",
     "gulp": "gulpjs/gulp.git#4.0",
-    "gulp-babel": "^6.1.2",
     "gulp-typescript": "^3.1.6",
     "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
@@ -53,7 +47,6 @@
     "plump": "kstf/plump#master"
   },
   "dependencies": {
-    "bluebird": "^3.4.6",
     "merge-options": "0.0.64",
     "redis": "^2.6.2",
     "rxjs": "^5.2.0"

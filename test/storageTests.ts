@@ -3,12 +3,7 @@
 
 import { TestType } from './testType';
 import { MemoryStore, Plump } from 'plump';
-import * as Bluebird from 'bluebird';
 import * as mergeOptions from 'merge-options';
-
-Bluebird.config({
-  longStackTraces: true,
-});
 
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -32,15 +27,15 @@ export function testSuite(context, storeOpts ) {
   const store = Object.assign(
     {},
     {
-      before: () => Bluebird.resolve(),
-      after: () => Bluebird.resolve(),
+      before: () => Promise.resolve(),
+      after: () => Promise.resolve(),
     },
     storeOpts
   );
   context.describe(store.name, () => {
     let actualStore;
     context.before(() => {
-      return (store.before || (() => Bluebird.resolve()))(actualStore)
+      return (store.before || (() => Promise.resolve()))(actualStore)
       .then(() => {
         actualStore = new store.ctor(store.opts); // eslint-disable-line new-cap
         actualStore.addSchema(TestType);
@@ -198,14 +193,14 @@ export function testSuite(context, storeOpts ) {
       context.it('should pass basic write-invalidation events to other datastores', () => {
         const memstore = new MemoryStore();
         const testPlump = new Plump();
-        return testPlump.addStore(memstore)
-        .then(() => testPlump.addStore(actualStore))
+        return testPlump.addCache(memstore)
+        .then(() => testPlump.setTerminal(actualStore))
         .then(() => testPlump.addType(TestType))
         .then(() => actualStore.writeAttributes({ typeName: 'tests', attributes: { name: 'potato' } }))
         .then((createdObject) => {
           return actualStore.read({ typeName: 'tests', id: createdObject.id })
           .then(() => {
-            return new Bluebird((resolve) => setTimeout(resolve, 100))
+            return new Promise((resolve) => setTimeout(resolve, 100))
             .then(() => {
               return expect(memstore.read({ typeName: 'tests', id: createdObject.id }))
               .to.eventually.have.deep.property('attributes.name', 'potato');
@@ -218,15 +213,19 @@ export function testSuite(context, storeOpts ) {
                 },
               });
             }).then(() => {
-              return new Bluebird((resolve) => setTimeout(resolve, 100));
+              return new Promise((resolve) => setTimeout(resolve, 100));
             }).then(() => {
               return expect(memstore.read({ typeName: 'tests', id: createdObject.id }))
               .to.eventually.be.null;
             });
           });
         })
-        .finally(() => {
+        .then(() => {
           return testPlump.teardown();
+        })
+        .catch((err) => {
+          testPlump.teardown();
+          throw err;
         });
       });
 
@@ -242,8 +241,8 @@ export function testSuite(context, storeOpts ) {
           .to.eventually.have.deep.property('attributes.name', 'potato');
         }).then(() => {
           memstore = new MemoryStore();
-          testPlump.addStore(memstore);
-          testPlump.addStore(actualStore);
+          testPlump.addCache(memstore);
+          testPlump.setTerminal(actualStore);
           return expect(memstore.read({ typeName: 'tests', id: testItem.id })).to.eventually.be.null;
         }).then(() => {
           return actualStore.read({ typeName: 'tests', id: testItem.id });
@@ -252,12 +251,19 @@ export function testSuite(context, storeOpts ) {
           // NOTE: this timeout is a hack, it is because
           // cacheable read events trigger multiple async things, but don't block
           // the promise from returning
-          return new Bluebird((resolve) => setTimeout(resolve, 100));
+          return new Promise((resolve) => setTimeout(resolve, 100));
         })
         .then(() => {
           return expect(memstore.read({ typeName: 'tests', id: testItem.id }))
           .to.eventually.have.deep.property('attributes.name', 'potato');
-        }).finally(() => testPlump.teardown());
+        })
+        .then(() => {
+          return testPlump.teardown();
+        })
+        .catch((err) => {
+          testPlump.teardown();
+          throw err;
+        });
       });
 
       context.it('should pass write-invalidation events on hasMany relationships to other datastores', () => {
@@ -265,8 +271,8 @@ export function testSuite(context, storeOpts ) {
         const memstore = new MemoryStore();
         const testPlump = new Plump();
         return testPlump.addType(TestType)
-        .then(() => testPlump.addStore(memstore))
-        .then(() => testPlump.addStore(actualStore))
+        .then(() => testPlump.addCache(memstore))
+        .then(() => testPlump.setTerminal(actualStore))
         .then(() => actualStore.writeAttributes({ typeName: 'tests', attributes: { name: 'potato' } }))
         .then((createdObject) => {
           testItem = createdObject;
@@ -282,15 +288,19 @@ export function testSuite(context, storeOpts ) {
           // NOTE: this timeout is a hack, it is because
           // cacheable read events trigger multiple async things, but don't block
           // the promise from returning
-          return new Bluebird((resolve) => setTimeout(resolve, 100));
+          return new Promise((resolve) => setTimeout(resolve, 100));
         })
         .then(() => memstore.read({ typeName: 'tests', id: testItem.id }, 'children'))
         .then((v) => expect(v.relationships.children).to.deep.equal([{ id: 100 }]))
         .then(() => actualStore.writeRelationshipItem({ typeName: 'tests', id: testItem.id }, 'children', { id: 101 }))
-        .then(() => new Bluebird((resolve) => setTimeout(resolve, 100)))
+        .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
         .then(() => memstore.read({ typeName: 'tests', id: testItem.id }))
         .then((v) => expect(v).to.not.have.deep.property('relationships.children'))
-        .finally(() => testPlump.teardown());
+        .then(() => testPlump.teardown())
+        .catch((err) => {
+          testPlump.teardown();
+          throw err;
+        });
       });
 
       context.it('should pass cacheable-read events on hasMany relationships to other datastores', () => {
@@ -306,15 +316,19 @@ export function testSuite(context, storeOpts ) {
         }).then(() => actualStore.writeRelationshipItem({ typeName: 'tests', id: testItem.id }, 'children', { id: 100 }))
         .then(() => {
           memstore = new MemoryStore();
-          testPlump.addStore(actualStore);
-          testPlump.addStore(memstore);
-          return expect(memstore.read({ typeName: 'tests', id: testItem.id })).to.eventually.be.null;
+          return testPlump.setTerminal(actualStore)
+          .then(() => testPlump.addCache(memstore))
+          .then(() => expect(memstore.read({ typeName: 'tests', id: testItem.id })).to.eventually.be.null);
         }).then(() => {
           return actualStore.read({ typeName: 'tests', id: testItem.id }, 'children');
-        }).then(() => new Bluebird((resolve) => setTimeout(resolve, 100)))
+        }).then(() => new Promise((resolve) => setTimeout(resolve, 100)))
         .then(() => memstore.read({ typeName: 'tests', id: testItem.id }, 'children'))
         .then((v) => expect(v.relationships.children).to.deep.equal([{ id: 100 }]))
-        .finally(() => testPlump.teardown());
+        .then(() => testPlump.teardown())
+        .catch((err) => {
+          testPlump.teardown();
+          throw err;
+        });
       });
     });
 

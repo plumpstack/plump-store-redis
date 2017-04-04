@@ -4,20 +4,10 @@ const sourcemaps = require('gulp-sourcemaps');
 const ts = require('gulp-typescript');
 
 function build() {
+  const tsProject = ts.createProject('tsconfig.json');
   return gulp.src(config.scripts, { cwd: config.src })
   .pipe(sourcemaps.init())
-  .pipe(ts({
-    allowSyntheticDefaultImports: true,
-    declaration: true,
-    lib: [
-      'dom',
-      'es2015',
-    ],
-    module: 'es2015',
-    moduleResolution: 'node',
-    // sourceMap: true,
-    target: 'es5',
-  }))
+  .pipe(tsProject())
   .pipe(sourcemaps.write())
   .pipe(gulp.dest(config.dest));
 }

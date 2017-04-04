@@ -24,31 +24,31 @@
   },
   "homepage": "https://github.com/kstf/plump-store-redis#readme",
   "devDependencies": {
-    "@types/core-js": "^0.9.38",
+    "@types/core-js": "^0.9.41",
     "@types/chai": "^3.4.35",
     "@types/chai-as-promised": "0.0.30",
     "@types/mocha": "^2.2.40",
-    "@types/node": "^7.0.10",
-    "@types/redis": "^0.12.34",
+    "@types/node": "^7.0.12",
+    "@types/redis": "^0.12.36",
     "chai": "^3.5.0",
-    "chai-as-promised": "^5.3.0",
+    "chai-as-promised": "^6.0.0",
     "del": "^2.2.2",
-    "fakeredis": "^1.0.3",
+    "fakeredis": "^2.0.0",
     "gulp": "gulpjs/gulp.git#4.0",
     "gulp-typescript": "^3.1.6",
     "ts-node": "^3.0.2",
-    "tslint": "^4.5.1",
+    "tslint": "^5.0.0",
     "tslint-eslint-rules": "^3.5.1",
-    "typescript": "^2.2.1",
-    "gulp-sourcemaps": "^1.6.0",
-    "mocha": "^3.0.2"
+    "typescript": "^2.2.2",
+    "gulp-sourcemaps": "^2.5.1",
+    "mocha": "^3.2.0"
   },
   "peerDependencies": {
     "plump": "kstf/plump#master"
   },
   "dependencies": {
     "merge-options": "0.0.64",
-    "redis": "^2.6.2",
-    "rxjs": "^5.2.0"
+    "redis": "^2.7.1",
+    "rxjs": "^5.3.0"
   }
 }

@@ -1,4 +1,4 @@
-import { ModelSchema, RelationshipSchema, Model } from 'plump';
+import { ModelSchema, RelationshipSchema, Model, ModelData, Schema } from 'plump';
 
 export const ChildrenSchema: RelationshipSchema = {
   sides: {
@@ -92,7 +92,6 @@ export const TestSchema: ModelSchema = {
   }
 };
 
-export class TestType extends Model {
-  static typeName = 'tests';
-  static schema: ModelSchema = TestSchema;
+@Schema(TestSchema)
+export class TestType extends Model<ModelData> {
 }

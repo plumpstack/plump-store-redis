@@ -44,7 +44,7 @@
     "mocha": "^3.3.0"
   },
   "peerDependencies": {
-    "plump": "^0.12.0"
+    "plump": "^0.13.0"
   },
   "dependencies": {
     "merge-options": "0.0.64",

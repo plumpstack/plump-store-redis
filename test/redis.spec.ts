@@ -24,7 +24,7 @@ describe('Redis-specific functionality', () => {
     const testStore = new RedisStore({ redisClient: testClient, terminal: true });
     return new Promise((resolve, reject) => {
       testClient.set(
-        testStore.keyString({ typeName: TestType.typeName, id: 1 }),
+        testStore.keyString({ type: TestType.type, id: 1 }),
         'foo',
         (err, reply) => err ? reject(err) : resolve(reply)
       );
@@ -32,16 +32,16 @@ describe('Redis-specific functionality', () => {
     .then(() => {
       return new Promise((resolve, reject) => {
         testClient.set(
-          testStore.keyString({ typeName: TestType.typeName, id: 7 }),
+          testStore.keyString({ type: TestType.type, id: 7 }),
           'foo',
           (err, reply) => err ? reject(err) : resolve(reply)
         );
       });
     })
     .then(() => testStore.addSchema(TestType))
-    .then(() => testStore.allocateId(TestType.typeName))
+    .then(() => testStore.allocateId(TestType.type))
     .then((n) => expect(n).to.equal(8))
-    .then(() => testStore.allocateId(TestType.typeName))
+    .then(() => testStore.allocateId(TestType.type))
     .then((n) => expect(n).to.equal(9));
   });
 });

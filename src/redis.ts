@@ -45,11 +45,11 @@ export class RedisStore extends KeyValueStore {
     return this.redis.quitAsync();
   }
 
-  addSchema(t: {typeName: string, schema: ModelSchema}) {
+  addSchema(t: {type: string, schema: ModelSchema}) {
     return super.addSchema(t)
     .then(() => {
-      return this._keys(t.typeName)
-      .then((keyArray) => {
+      return this._keys(t.type)
+      .then((keyArray: string[]) => {
         if (keyArray.length === 0) {
           return 0;
         } else {
@@ -58,8 +58,8 @@ export class RedisStore extends KeyValueStore {
           .filter((i) => saneNumber(i))
           .reduce((max, current) => (current > max) ? current : max, 0);
         }
-      }).then((n) => {
-        this.maxKeys[t.typeName] = n;
+      }).then((n: number) => {
+        this.maxKeys[t.type] = n;
       });
     });
   }
@@ -77,12 +77,12 @@ export class RedisStore extends KeyValueStore {
     });
   }
 
-  _keys(typeName: string): Promise<string[]> {
-    return this.promiseCall('keys', `${typeName}:*`);
+  _keys(type: string): Promise<string[]> {
+    return this.promiseCall('keys', `${type}:*`);
   }
 
   _get(k: string): Promise<ModelData | null> {
-    return this.promiseCall('get', k).then(v => JSON.parse(v));
+    return this.promiseCall('get', k).then((v: string) => JSON.parse(v));
   }
 
   _set(k: string, v: ModelData): Promise<ModelData> {

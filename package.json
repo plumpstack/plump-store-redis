@@ -1,6 +1,6 @@
 {
   "name": "plump-store-redis",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Plump plugin for Redis",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,30 +25,26 @@
   "homepage": "https://github.com/kstf/plump-store-redis#readme",
   "devDependencies": {
     "@types/core-js": "^0.9.41",
-    "@types/chai": "^3.5.1",
-    "@types/chai-as-promised": "0.0.30",
+    "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",
-    "@types/node": "^7.0.14",
+    "@types/node": "^7.0.22",
     "@types/redis": "^0.12.36",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
+    "chai": "^4.0.0",
     "del": "^2.2.2",
     "fakeredis": "^2.0.0",
-    "gulp": "gulpjs/gulp.git#4.0",
-    "gulp-typescript": "^3.1.6",
-    "ts-node": "^3.0.2",
-    "tslint": "^5.1.0",
-    "tslint-eslint-rules": "^4.0.0",
-    "typescript": "^2.2.2",
+    "gulp": "github:gulpjs/gulp.git#4.0",
+    "gulp-typescript": "^3.1.7",
+    "ts-node": "^3.0.4",
+    "tslint": "^5.3.2",
+    "tslint-eslint-rules": "^4.1.1",
+    "typescript": "^2.3.4",
     "gulp-sourcemaps": "^2.6.0",
-    "mocha": "^3.3.0"
-  },
-  "peerDependencies": {
-    "plump": "^0.13.0"
+    "mocha": "^3.4.2",
+    "plump": "^0.14.0"
   },
   "dependencies": {
-    "merge-options": "0.0.64",
+    "merge-options": "1.0.0",
     "redis": "^2.7.1",
-    "rxjs": "^5.3.0"
+    "rxjs": "^5.4.0"
   }
 }

@@ -93,5 +93,4 @@ export const TestSchema: ModelSchema = {
 };
 
 @Schema(TestSchema)
-export class TestType extends Model<ModelData> {
-}
+export class TestType extends Model<ModelData> { }

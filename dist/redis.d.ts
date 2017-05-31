@@ -7,11 +7,11 @@ export declare class RedisStore extends KeyValueStore {
     });
     teardown(): any;
     addSchema(t: {
-        typeName: string;
+        type: string;
         schema: ModelSchema;
     }): Promise<void>;
     promiseCall(method: string, ...args: any[]): Promise<any>;
-    _keys(typeName: string): Promise<string[]>;
+    _keys(type: string): Promise<string[]>;
     _get(k: string): Promise<ModelData | null>;
     _set(k: string, v: ModelData): Promise<ModelData>;
     _del(k: string): Promise<ModelData>;

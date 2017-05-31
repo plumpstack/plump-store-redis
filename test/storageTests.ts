@@ -6,6 +6,14 @@ import { MemoryStore, Plump, TerminalStore, ModelData } from 'plump';
 import * as mergeOptions from 'merge-options';
 import * as chai from 'chai';
 
+declare global {
+  namespace Chai {
+    interface Assertion {
+      nested: Assertion;
+    }
+  }
+}
+
 
 const expect = chai.expect;
 

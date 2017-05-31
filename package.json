@@ -39,9 +39,7 @@
     "tslint-eslint-rules": "^4.1.1",
     "typescript": "^2.3.4",
     "gulp-sourcemaps": "^2.6.0",
-    "mocha": "^3.4.2"
-  },
-  "peerDependencies": {
+    "mocha": "^3.4.2",
     "plump": "^0.14.0"
   },
   "dependencies": {

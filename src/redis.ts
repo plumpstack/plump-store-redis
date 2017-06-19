@@ -41,10 +41,21 @@ export class RedisStore extends KeyValueStore {
     }
   }
 
-  teardown() {
-    return new Promise((resolve) => {
-      this.redis.quit(() => resolve());
+  promiseCall(method: string, ...args): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const argsWithCB = args.concat((err, val) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(val);
+        }
+      });
+      this.redis[method].apply(this.redis, argsWithCB);
     });
+  }
+
+  teardown() {
+    return this.promiseCall('quit');
   }
 
   addSchema(t: {type: string, schema: ModelSchema}) {
@@ -63,19 +74,6 @@ export class RedisStore extends KeyValueStore {
       }).then((n: number) => {
         this.maxKeys[t.type] = n;
       });
-    });
-  }
-
-  promiseCall(method: string, ...args): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const argsWithCB = args.concat((err, val) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(val);
-        }
-      });
-      this.redis[method].apply(this.redis, argsWithCB);
     });
   }
 

@@ -2,6 +2,7 @@ import { RedisStore } from '../src/redis';
 import { testSuite } from './storageTests';
 import { TestType } from './testType';
 import * as Redis from 'fakeredis';
+// import * as Redis from 'redis';
 
 import 'mocha';
 import * as chai from 'chai';

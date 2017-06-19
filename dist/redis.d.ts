@@ -6,12 +6,12 @@ export declare class RedisStore extends KeyValueStore {
         redisClient?: Redis.RedisClient;
         terminal?: boolean;
     });
-    teardown(): Promise<{}>;
+    promiseCall(method: string, ...args: any[]): Promise<any>;
+    teardown(): Promise<any>;
     addSchema(t: {
         type: string;
         schema: ModelSchema;
     }): Promise<void>;
-    promiseCall(method: string, ...args: any[]): Promise<any>;
     _keys(type: string): Promise<string[]>;
     _get(k: string): Promise<ModelData | null>;
     _set(k: string, v: ModelData): Promise<ModelData>;

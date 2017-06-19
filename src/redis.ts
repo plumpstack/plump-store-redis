@@ -6,8 +6,8 @@ function saneNumber(i) {
 }
 
 export class RedisStore extends KeyValueStore {
-  private redis: any;
-  constructor(opts: { redisClient?: any, terminal?: boolean } = {}) {
+  public redis: Redis.RedisClient;
+  constructor(opts: { redisClient?: Redis.RedisClient, terminal?: boolean } = {}) {
     super(opts);
     const options = Object.assign(
       {},
@@ -42,7 +42,9 @@ export class RedisStore extends KeyValueStore {
   }
 
   teardown() {
-    return this.redis.quitAsync();
+    return new Promise((resolve) => {
+      this.redis.quit(() => resolve());
+    });
   }
 
   addSchema(t: {type: string, schema: ModelSchema}) {

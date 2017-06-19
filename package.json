@@ -1,6 +1,6 @@
 {
   "name": "plump-store-redis",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Plump plugin for Redis",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -40,7 +40,7 @@
     "typescript": "^2.3.4",
     "gulp-sourcemaps": "^2.6.0",
     "mocha": "^3.4.2",
-    "plump": "^0.14.0"
+    "plump": "^0.16.0"
   },
   "dependencies": {
     "merge-options": "1.0.0",

@@ -9,14 +9,6 @@ import * as chai from 'chai';
 
 const expect = chai.expect;
 
-declare global {
-  namespace Chai {
-    interface Assertion {
-      nested: Assertion;
-    }
-  }
-}
-
 const sampleObject = {
   type: TestType.type,
   attributes: {
@@ -253,9 +245,8 @@ export function testSuite(context, storeOpts) {
     context.describe('events', () => {
       context.it('should pass basic write-invalidation events to other datastores', () => {
         const memstore = new MemoryStore();
-        const testPlump = new Plump();
+        const testPlump = new Plump(actualStore);
         return testPlump.addCache(memstore)
-        .then(() => testPlump.setTerminal(actualStore))
         .then(() => testPlump.addType(TestType))
         .then(() => actualStore.writeAttributes({ type: TestType.type, attributes: { name: 'potato' } }))
         .then((createdObject) => {
@@ -288,22 +279,18 @@ export function testSuite(context, storeOpts) {
       });
 
       context.it('should pass basic cacheable-read events up the stack', () => {
-        const testPlump = new Plump();
         let testItem;
-        let memstore;
-        return testPlump.addType(TestType)
-        .then(() => actualStore.writeAttributes({ type: TestType.type, attributes: { name: 'potato' } }))
+        const memstore = new MemoryStore();
+        return actualStore.writeAttributes({ type: TestType.type, attributes: { name: 'potato' } })
         .then((createdObject) => {
           testItem = createdObject;
           return actualStore.read({ type: TestType.type, id: testItem.id });
         })
         .then((v) => expect(v).to.have.nested.property('attributes.name', 'potato'))
         .then(() => {
-          memstore = new MemoryStore();
-          return Promise.all([
-            testPlump.addCache(memstore),
-            testPlump.setTerminal(actualStore),
-          ]);
+          const testPlump = new Plump(actualStore);
+          return testPlump.addType(TestType)
+          .then(() => testPlump.addCache(memstore));
         })
         .then(() => memstore.read({ type: TestType.type, id: testItem.id }))
         .then(v => expect(v).to.be.null)
@@ -315,21 +302,15 @@ export function testSuite(context, storeOpts) {
           return new Promise((resolve) => setTimeout(resolve, 100));
         })
         .then(() => memstore.read({ type: TestType.type, id: testItem.id }))
-        .then((v) => expect(v).to.have.nested.property('attributes.name', 'potato'))
-        .then(() => testPlump.teardown())
-        .catch((err) => {
-          testPlump.teardown();
-          throw err;
-        });
+        .then((v) => expect(v).to.have.nested.property('attributes.name', 'potato'));
       });
 
       context.it('should pass write-invalidation events on hasMany relationships to other datastores', () => {
         let testItem;
         const memstore = new MemoryStore();
-        const testPlump = new Plump();
+        const testPlump = new Plump(actualStore);
         return testPlump.addType(TestType)
         .then(() => testPlump.addCache(memstore))
-        .then(() => testPlump.setTerminal(actualStore))
         .then(() => actualStore.writeAttributes({ type: TestType.type, attributes: { name: 'potato' } }))
         .then((createdObject) => {
           testItem = createdObject;
@@ -369,9 +350,7 @@ export function testSuite(context, storeOpts) {
       context.it('should pass cacheable-read events on hasMany relationships to other datastores', () => {
         let testItem;
         let memstore;
-        const testPlump = new Plump();
-        return testPlump.addType(TestType)
-        .then(() => actualStore.writeAttributes({ type: TestType.type, attributes: { name: 'potato' } }))
+        return actualStore.writeAttributes({ type: TestType.type, attributes: { name: 'potato' } })
         .then((createdObject) => {
           testItem = createdObject;
           return actualStore.read({ type: TestType.type, id: testItem.id });
@@ -383,20 +362,23 @@ export function testSuite(context, storeOpts) {
           { type: TestType.type, id: 100 }
         ))
         .then(() => {
+          const testPlump = new Plump(actualStore);
           memstore = new MemoryStore();
-          return testPlump.setTerminal(actualStore)
-          .then(() => testPlump.addCache(memstore))
-          .then(() => memstore.read({ type: TestType.type, id: testItem.id }))
-          .then((v) => expect(v).to.be.null);
-        }).then(() => {
-          return actualStore.read({ type: TestType.type, id: testItem.id }, 'children');
-        }).then(() => new Promise((resolve) => setTimeout(resolve, 100)))
-        .then(() => memstore.read({ type: TestType.type, id: testItem.id }, 'children'))
-        .then((v) => expect(v.relationships.children).to.deep.equal([{ type: TestType.type, id: 100 }]))
-        .then(() => testPlump.teardown())
-        .catch((err) => {
-          testPlump.teardown();
-          throw err;
+          return testPlump.addType(TestType)
+          .then(() => {
+            return testPlump.addCache(memstore)
+            .then(() => memstore.read({ type: TestType.type, id: testItem.id }))
+            .then((v) => expect(v).to.be.null);
+          }).then(() => {
+            return actualStore.read({ type: TestType.type, id: testItem.id }, 'children');
+          }).then(() => new Promise((resolve) => setTimeout(resolve, 100)))
+          .then(() => memstore.read({ type: TestType.type, id: testItem.id }, 'children'))
+          .then((v) => expect(v.relationships.children).to.deep.equal([{ type: TestType.type, id: 100 }]))
+          .then(() => testPlump.teardown())
+          .catch((err) => {
+            testPlump.teardown();
+            throw err;
+          });
         });
       });
     });

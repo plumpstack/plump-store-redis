@@ -1,11 +1,12 @@
+import * as Redis from 'redis';
 import { KeyValueStore, ModelData, ModelSchema } from 'plump';
 export declare class RedisStore extends KeyValueStore {
-    private redis;
+    redis: Redis.RedisClient;
     constructor(opts?: {
-        redisClient?: any;
+        redisClient?: Redis.RedisClient;
         terminal?: boolean;
     });
-    teardown(): any;
+    teardown(): Promise<{}>;
     addSchema(t: {
         type: string;
         schema: ModelSchema;

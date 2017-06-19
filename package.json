@@ -40,7 +40,7 @@
     "typescript": "^2.3.4",
     "gulp-sourcemaps": "^2.6.0",
     "mocha": "^3.4.2",
-    "plump": "^0.15.1"
+    "plump": "^0.16.0"
   },
   "dependencies": {
     "merge-options": "1.0.0",

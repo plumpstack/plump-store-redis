@@ -1,13 +1,17 @@
 import * as Redis from 'redis';
-import { KeyValueStore, ModelData, ModelSchema } from 'plump';
+import { KeyValueStore, ModelData, ModelSchema, ModelReference } from 'plump';
 
 function saneNumber(i) {
-  return ((typeof i === 'number') && (!isNaN(i)) && (i !== Infinity) && (i !== -Infinity));
+  return (
+    typeof i === 'number' && !isNaN(i) && i !== Infinity && i !== -Infinity
+  );
 }
 
 export class RedisStore extends KeyValueStore {
   public redis: Redis.RedisClient;
-  constructor(opts: { redisClient?: Redis.RedisClient, terminal?: boolean } = {}) {
+  constructor(
+    opts: { redisClient?: Redis.RedisClient; terminal?: boolean } = {},
+  ) {
     super(opts);
     const options = Object.assign(
       {},
@@ -15,7 +19,7 @@ export class RedisStore extends KeyValueStore {
         port: 6379,
         host: 'localhost',
         db: 0,
-        retry_strategy: (o) => {
+        retry_strategy: o => {
           if (o.error.code === 'ECONNREFUSED') {
             // End reconnecting on a specific error and flush all commands with a individual error
             return new Error('The server refused the connection');
@@ -32,7 +36,7 @@ export class RedisStore extends KeyValueStore {
           return Math.max(o.attempt * 100, 3000);
         },
       },
-      opts
+      opts,
     );
     if (opts.redisClient !== undefined) {
       this.redis = opts.redisClient;
@@ -58,22 +62,37 @@ export class RedisStore extends KeyValueStore {
     return this.promiseCall('quit');
   }
 
-  addSchema(t: {type: string, schema: ModelSchema}) {
-    return super.addSchema(t)
-    .then(() => {
+  addSchema(t: { type: string; schema: ModelSchema }) {
+    return super.addSchema(t).then(() => {
       return this._keys(t.type)
-      .then((keyArray: string[]) => {
-        if (keyArray.length === 0) {
-          return 0;
-        } else {
-          return keyArray.map((k) => k.split(':')[1])
-          .map((k) => parseInt(k, 10))
-          .filter((i) => saneNumber(i))
-          .reduce((max, current) => (current > max) ? current : max, 0);
-        }
-      }).then((n: number) => {
-        this.maxKeys[t.type] = n;
-      });
+        .then((keyArray: string[]) => {
+          if (keyArray.length === 0) {
+            return 0;
+          } else {
+            return keyArray
+              .map(k => k.split(':')[1])
+              .map(k => parseInt(k, 10))
+              .filter(i => saneNumber(i))
+              .reduce((max, current) => (current > max ? current : max), 0);
+          }
+        })
+        .then((n: number) => {
+          this.maxKeys[t.type] = n;
+        });
+    });
+  }
+
+  readAttributes(value: ModelReference): Promise<ModelData> {
+    return super.readAttributes(value).then(response => {
+      const schema = this.getSchema(value.type);
+      Object.keys(schema.attributes)
+        .filter(attr => schema.attributes[attr].type === 'date')
+        .forEach(dateAttr => {
+          response.attributes[dateAttr] = new Date(
+            response.attributes[dateAttr],
+          );
+        });
+      return response;
     });
   }
 

@@ -1,5 +1,5 @@
 import * as Redis from 'redis';
-import { KeyValueStore, ModelData, ModelSchema } from 'plump';
+import { KeyValueStore, ModelData, ModelSchema, ModelReference } from 'plump';
 export declare class RedisStore extends KeyValueStore {
     redis: Redis.RedisClient;
     constructor(opts?: {
@@ -12,6 +12,7 @@ export declare class RedisStore extends KeyValueStore {
         type: string;
         schema: ModelSchema;
     }): Promise<void>;
+    readAttributes(value: ModelReference): Promise<ModelData>;
     _keys(type: string): Promise<string[]>;
     _get(k: string): Promise<ModelData | null>;
     _set(k: string, v: ModelData): Promise<ModelData>;

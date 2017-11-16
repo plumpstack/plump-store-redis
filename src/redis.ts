@@ -1,5 +1,11 @@
 import * as Redis from 'redis';
-import { KeyValueStore, ModelData, ModelSchema, ModelReference } from 'plump';
+import {
+  KeyValueStore,
+  ModelData,
+  ModelSchema,
+  ModelReference,
+  StorageReadRequest,
+} from 'plump';
 
 function saneNumber(i) {
   return (
@@ -82,9 +88,9 @@ export class RedisStore extends KeyValueStore {
     });
   }
 
-  readAttributes(value: ModelReference): Promise<ModelData> {
-    return super.readAttributes(value).then(response => {
-      const schema = this.getSchema(value.type);
+  readAttributes(req: StorageReadRequest): Promise<ModelData> {
+    return super.readAttributes(req).then(response => {
+      const schema = this.getSchema(req.item.type);
       Object.keys(schema.attributes)
         .filter(attr => schema.attributes[attr].type === 'date')
         .forEach(dateAttr => {

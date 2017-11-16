@@ -1,50 +1,47 @@
 {
   "name": "plump-store-redis",
-  "version": "0.20.0",
+  "version": "0.25.0",
   "description": "Plump plugin for Redis",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "mocha  --require ts-node/register test/*.spec.ts"
+    "test": "gulp maketest && mocha testbuild/*.spec.js && gulp testclean"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kstf/plump-store-redis.git"
+    "url": "git+https://github.com/plumpstack/plump-store-redis.git"
   },
-  "keywords": [
-    "typescript",
-    "orm",
-    "datastore",
-    "activerecord"
-  ],
+  "keywords": ["typescript", "orm", "datastore", "activerecord"],
   "author": "Eric Eslinger <eric.eslinger@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kstf/plump-store-redis/issues"
+    "url": "https://github.com/plumpstack/plump-store-redis/issues"
   },
-  "homepage": "https://github.com/kstf/plump-store-redis#readme",
+  "homepage": "https://github.com/plumpstack/plump-store-redis#readme",
   "devDependencies": {
+    "@types/chai": "^4.0.5",
     "@types/core-js": "^0.9.43",
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.43",
-    "@types/node": "^8.0.34",
-    "@types/redis": "^2.6.0",
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.53",
+    "@types/redis": "^2.8.1",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
     "del": "^3.0.0",
     "fakeredis": "^2.0.0",
     "gulp": "github:gulpjs/gulp.git#4.0",
-    "gulp-typescript": "^3.2.2",
-    "ts-node": "^3.3.0",
-    "tslint": "^5.7.0",
-    "tslint-eslint-rules": "^4.1.1",
-    "typescript": "^2.5.3",
+    "gulp-babel": "^7.0.0",
     "gulp-sourcemaps": "^2.6.1",
+    "gulp-typescript": "^3.2.3",
     "mocha": "^4.0.1",
-    "plump": "^0.20.0"
+    "plump": "0.25.1",
+    "tslint": "^5.8.0",
+    "tslint-eslint-rules": "^4.1.1",
+    "typescript": "^2.6.1"
   },
   "dependencies": {
     "merge-options": "1.0.0",
     "redis": "^2.8.0",
-    "rxjs": "^5.4.3"
+    "rxjs": "^5.5.2"
   }
 }

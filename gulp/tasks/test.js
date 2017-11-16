@@ -1,14 +1,13 @@
 const gulp = require('gulp');
 const config = require('../config');
 const ts = require('gulp-typescript');
-const mergeStream = require('merge-stream');
 const babel = require('gulp-babel');
+const del = require('del');
+const mergeStream = require('merge-stream');
 
-function build() {
+function test() {
   const tsProject = ts.createProject('tsconfig.json');
-  const tsResult = gulp
-    .src(config.scripts, { cwd: config.src })
-    .pipe(tsProject());
+  const tsResult = gulp.src('*.ts', { cwd: 'test' }).pipe(tsProject());
 
   return mergeStream(
     tsResult.js.pipe(
@@ -26,9 +25,15 @@ function build() {
       }),
     ),
     tsResult.dts,
-  ).pipe(gulp.dest(config.dest));
+  ).pipe(gulp.dest('testbuild'));
 }
 
-gulp.task('build', build);
+function cleanTest() {
+  return del(['testbuild']);
+}
 
-module.exports = build;
+gulp.task('testbuild', test);
+gulp.task('testclean', cleanTest);
+gulp.task('test', gulp.series('testclean', 'testbuild'));
+
+module.exports = test;

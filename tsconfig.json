@@ -1,32 +1,18 @@
 {
-    "compilerOptions": {
-      "outDir": "./dist",
-      "target": "es5",
-      "lib": ["es6", "dom"],
-      "types": ["node", "mocha"],
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "isolatedModules": false,
-      "jsx": "react",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "declaration": true,
-      "noImplicitUseStrict": false,
-      "noEmitOnError": true,
-      "removeComments": true,
-      "noLib": false,
-      "preserveConstEnums": true,
-      "suppressImplicitAnyIndexErrors": true
-    },
-    "include": [
-      "./src/**/*.ts", "./test/**/*.ts"
-    ],
-    "exclude": [
-      "node_modules"
-    ],
-    "compileOnSave": false,
-    "buildOnSave": false,
-    "atom": {
-      "rewriteTsconfig": false
-    }
+  "compilerOptions": {
+    "lib": ["dom", "es6"],
+    "module": "es2015",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "target": "es2017",
+    "baseUrl": "."
+  },
+  "include": ["src/**/*.ts", "./test/**/*.ts"],
+  "exclude": ["node_modules"],
+  "compileOnSave": false,
+  "atom": {
+    "rewriteTsconfig": false
+  }
 }
